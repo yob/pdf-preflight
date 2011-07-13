@@ -37,4 +37,12 @@ describe Preflight::Rules::OnlyEmbeddedFonts do
     chk.messages(ohash).should_not be_empty
   end
 
+  it "pass files with a non-embedded base-14 font in an AcroForm that has no fields" do
+    filename = pdf_spec_file("acroform")
+    ohash    = PDF::Reader::ObjectHash.new(filename)
+    chk      = Preflight::Rules::OnlyEmbeddedFonts.new
+
+    puts chk.messages(ohash)
+    chk.messages(ohash).should be_empty
+  end
 end
