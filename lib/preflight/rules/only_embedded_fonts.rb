@@ -3,7 +3,17 @@
 module Preflight
   module Rules
 
-    # check a file only uses embedded fonts
+    # Check the target PDF only uses embedded fonts
+    #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::OnlyEmbeddedFonts
+    #   end
     #
     class OnlyEmbeddedFonts
 

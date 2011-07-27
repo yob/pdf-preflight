@@ -3,8 +3,17 @@
 module Preflight
   module Rules
 
-    # PDF/X files are not allowed to use Filespecs to refer
-    # to external files.
+    # Check the target PDF doesn't use Filespecs to refer to external files.
+    #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::NoFilespecs
+    #   end
     #
     class NoFilespecs
 

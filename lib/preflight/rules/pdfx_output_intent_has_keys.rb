@@ -9,6 +9,16 @@ module Preflight
     # This doesn't raise an error if there is no GTS_PDFX, that's another
     # rules job.
     #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::PdfxOutputIntentHasKeys, :OutputConditionIdentifier, :Info
+    #   end
+    #
     class PdfxOutputIntentHasKeys
 
       def initialize(*keys)

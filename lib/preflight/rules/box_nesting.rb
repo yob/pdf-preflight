@@ -6,6 +6,18 @@ module Preflight
     # For each page MediaBox must be the biggest box, followed by the
     # BleedBox or ArtBox, followed by the TrimBox.
     #
+    # Boxes may be omitted, but if they're provided they must be correctly nested.
+    #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::BoxNesting
+    #   end
+    #
     class BoxNesting
 
       def check_page(page)

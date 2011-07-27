@@ -9,6 +9,16 @@ module Preflight
     # For high quality prints, you generally want raster images to be
     # AT LEAST 300 points-per-inch (ppi). 600 is better, 1200 better again.
     #
+    # Arguments: the lowest PPI that is ok
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::MinPpi, 300
+    #   end
+    #
     class MinPpi
       include Preflight::Measurements
 

@@ -3,7 +3,19 @@
 module Preflight
   module Rules
 
-    # ensure the root dict has the specified keys
+    # Every PDF has a 'Root' dictionary, check that the target file has
+    # certain keys in it's Root
+    #
+    # Arguments: the required keys
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::RootHasKeys, :OutputIntents
+    #   end
+    #
     class RootHasKeys
 
       def initialize(*keys)

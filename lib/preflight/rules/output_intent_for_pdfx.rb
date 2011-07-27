@@ -3,6 +3,18 @@
 module Preflight
   module Rules
 
+    # Check the target PDF contains an output intent suitable for PDFX
+    #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::OutputIntentForPdfx
+    #   end
+    #
     class OutputIntentForPdfx
 
       def check_hash(ohash)

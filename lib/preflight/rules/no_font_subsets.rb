@@ -3,9 +3,18 @@
 module Preflight
   module Rules
 
-    # check a file has no font subsets. Subsets are handy and valid
-    # in standards like PDFX/1a, but they make it hard to edit a
-    # file
+    # check a file has no font subsets. Subsets are handy and valid in
+    # standards like PDFX/1a, but they can make it hard to edit a file
+    #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::NoFontSubsets
+    #   end
     #
     class NoFontSubsets
 

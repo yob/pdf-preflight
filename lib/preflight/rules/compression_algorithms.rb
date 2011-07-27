@@ -3,7 +3,17 @@
 module Preflight
   module Rules
 
-    # check a file only uses permitted compression algorithms
+    # check a file doesn't use unwanted compression algorithms
+    #
+    # Arguments: a list of permitted compression algorithms.
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::CompressionAlgorithms, :CCITTFaxDecode, :DCTDecode, :FlateDecode
+    #   end
     #
     class CompressionAlgorithms
 

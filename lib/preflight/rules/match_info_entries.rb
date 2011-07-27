@@ -2,6 +2,19 @@
 
 module Preflight
   module Rules
+    # Every PDF has an optional 'Info' dictionary. Check that the target file
+    # has certain keys and that the keys match a given regexp
+    #
+    # Arguments: the required keys
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::MatchInfoEntries, {:GTS_PDFXVersion => /\APDF\/X/}
+    #   end
+    #
     class MatchInfoEntries
 
       def initialize(matches = {})
