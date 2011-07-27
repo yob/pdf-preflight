@@ -82,7 +82,7 @@ Use an existing rule set as the base for a larger set of rules.
 === Adding Rules to a Profile Instance
 
 Dynamically add rules to a profile instance. Useful when the required set of
-rules depends dynamic conditions like user input or database entries.
+rules depends on dynamic conditions like user input or database entries.
 
   require "preflight"
 
