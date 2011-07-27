@@ -91,6 +91,22 @@ rules depends dynamic conditions like user input or database entries.
 
   puts preflight.check("somefile.pdf").inspect
 
+=== Available Rules
+
+All rules shipped with this gem are in the Preflight::Rules namespace. Explore
+the classes and related documentation in there to see what's available.
+
+If you need a rule that we don't ship it is perfectly valid to build your own.
+A profile will accept any class that behaves appropriatly. If you think your
+new rule may be of general interest please send me a pull request so I can
+include it in the next release.
+
+I'm yet to document the API that a rule class must follow. There are three
+types of rules, each designed to check a different aspect of the target file
+- raw objects, page attributes and content streams. At this stage your best
+option when writing your own rule is to copy an existing rule as a starting
+point.
+
 == Status
 
 This library is in an early stage of development. Use at your own risk.
