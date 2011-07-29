@@ -14,7 +14,6 @@ module Preflight
       rule Preflight::Rules::InfoSpecifiesTrapping
       rule Preflight::Rules::CompressionAlgorithms, :CCITTFaxDecode, :DCTDecode, :FlateDecode, :RunLengthDecode
       rule Preflight::Rules::DocumentId
-      rule Preflight::Rules::NoEncryption
       rule Preflight::Rules::NoFilespecs
       rule Preflight::Rules::OnlyEmbeddedFonts
       rule Preflight::Rules::BoxNesting

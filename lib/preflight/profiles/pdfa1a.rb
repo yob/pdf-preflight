@@ -9,7 +9,6 @@ module Preflight
 
       # hard failures of the pdfx/1a spec
       rule Preflight::Rules::CompressionAlgorithms, :CCITTFaxDecode, :DCTDecode, :FlateDecode, :RunLengthDecode
-      rule Preflight::Rules::NoEncryption
       rule Preflight::Rules::OnlyEmbeddedFonts
 
     end
