@@ -31,7 +31,7 @@ describe Preflight::Profiles::PDFX1A do
     preflight = Preflight::Profiles::PDFX1A.new
     messages  = preflight.check(filename)
 
-    messages.empty?.should_not be_true
+    messages.should eql(["Can't preflight an encrypted PDF"])
   end
 
 end
