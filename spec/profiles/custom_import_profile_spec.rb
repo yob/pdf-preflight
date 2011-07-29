@@ -21,7 +21,7 @@ describe "Customised profile that imports the standard PDF/X-1a profile" do
   end
 
   it "fail a file that isn't PDF/X-1a compliant" do
-    filename  = pdf_spec_file("encrypted")
+    filename  = pdf_spec_file("pdfa-1a")
     preflight = CustomImportProfile.new
     messages  = preflight.check(filename)
 
