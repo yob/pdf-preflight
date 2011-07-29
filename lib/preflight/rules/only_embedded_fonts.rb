@@ -3,32 +3,47 @@
 module Preflight
   module Rules
 
-    # check a file only uses embedded fonts
+    # Check the target PDF only uses embedded fonts
+    #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::OnlyEmbeddedFonts
+    #   end
     #
     class OnlyEmbeddedFonts
 
-      def messages(ohash)
-        array = []
-        ohash.each do |key, obj|
-          next unless obj.is_a?(::Hash) && obj[:Type] == :Font
-          if !embedded?(ohash, obj)
+      def check_page(page)
+        array     = []
+        resources = page.resources || {}
+        fonts     = page.objects.deref(resources[:Font]) || {}
+
+        fonts.each { |key, obj|
+          obj = page.objects.deref(obj)
+          if !embedded?(page.objects, obj)
             array << "Font #{obj[:BaseFont]} is not embedded"
           end
-        end
+        }
         array
       end
 
       private
 
-      def embedded?(ohash, font)
+      def embedded?(objects, font)
+        return true if font[:Subtype] == :Type3
+
         if font.has_key?(:FontDescriptor)
-          descriptor = ohash.object(font[:FontDescriptor])
+          descriptor = objects.deref(font[:FontDescriptor])
           descriptor.has_key?(:FontFile) || descriptor.has_key?(:FontFile2) || descriptor.has_key?(:FontFile3)
         elsif font[:Subtype] == :Type0
-          descendants = ohash.object(font[:DescendantFonts])
+          descendants = objects.deref(font[:DescendantFonts])
           descendants.all? { |f|
-            f = ohash.object(f)
-            embedded?(ohash, f)
+            f = objects.deref(f)
+            embedded?(objects, f)
           }
         else
           false

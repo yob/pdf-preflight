@@ -2,9 +2,22 @@
 
 module Preflight
   module Rules
+    # Every PDF has an optional 'Info' dictionary. Check that the dictionary
+    # has a 'Trapped' entry that is set to True or False
+    #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::InfoSpecifiesTrapping
+    #   end
+    #
     class InfoSpecifiesTrapping
 
-      def messages(ohash)
+      def check_hash(ohash)
         info = ohash.object(ohash.trailer[:Info])
 
         if !info.has_key?(:Trapped)

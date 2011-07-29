@@ -3,12 +3,21 @@
 module Preflight
   module Rules
 
-    # PDF/X files are not allowed to use Filespecs to refer
-    # to external files.
+    # Check the target PDF doesn't use Filespecs to refer to external files.
+    #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::NoFilespecs
+    #   end
     #
     class NoFilespecs
 
-      def messages(ohash)
+      def check_hash(ohash)
         if count_filespec_dicts(ohash) > 0
           ["File uses at least 1 Filespec to refer to an external file"]
         else

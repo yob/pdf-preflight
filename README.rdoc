@@ -13,6 +13,10 @@ difficult to script and you know, expensive.
 This may not check as comprehensively as the official preflight tools from Adobe
 and friends, but hopefully it'll get you most of the way with less stress.
 
+Unlike some preflight tools, this library doesn't attempt to fix any issues. It
+only reports them. That may change one day, but for now you will need to fix
+any issues that are detected by using some other tool.
+
 == Installation
 
   gem install preflight
@@ -77,9 +81,8 @@ Use an existing rule set as the base for a larger set of rules.
 
 === Adding Rules to a Profile Instance
 
-Use an existing rule set as the base for a larger set of rules by adding
-rules to a profile instance. Useful when the required set of rules depends
-dynamic conditions.
+Dynamically add rules to a profile instance. Useful when the required set of
+rules depends on dynamic conditions like user input or database entries.
 
   require "preflight"
 
@@ -87,6 +90,22 @@ dynamic conditions.
   prefight.rule Preflight::Rules::MaxVersion, 1.4
 
   puts preflight.check("somefile.pdf").inspect
+
+=== Available Rules
+
+All rules shipped with this gem are in the Preflight::Rules namespace. Explore
+the classes and related documentation in there to see what's available.
+
+If you need a rule that we don't ship it is perfectly valid to build your own.
+A profile will accept any class that behaves appropriatly. If you think your
+new rule may be of general interest please send me a pull request so I can
+include it in the next release.
+
+I'm yet to document the API that a rule class must follow. There are three
+types of rules, each designed to check a different aspect of the target file
+- raw objects, page attributes and content streams. At this stage your best
+option when writing your own rule is to copy an existing rule as a starting
+point.
 
 == Status
 
@@ -98,7 +117,6 @@ This is pure ruby should run on most ruby VMs. I develop on MRI 1.9.2.
 
 == Further Reading
 
-* http://chneukirchen.github.com/rps/
 * http://en.wikipedia.org/wiki/PDF/A
 * http://en.wikipedia.org/wiki/PDF/X
 * http://www.planetpdf.com/planetpdf/pdfs/pdfx3_draft4.pdf

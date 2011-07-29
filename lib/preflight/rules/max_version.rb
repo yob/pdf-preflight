@@ -4,13 +4,24 @@ module Preflight
   module Rules
     # ensure the PDF version of the file under review is not more recent
     # than desired
+    #
+    # Arguments: the maximum version
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::MaxVersion, 1.4
+    #   end
+    #
     class MaxVersion
 
       def initialize(max_version)
         @max_version = max_version.to_f
       end
 
-      def messages(ohash)
+      def check_hash(ohash)
         if ohash.pdf_version > @max_version
           ["PDF version should be #{@max_version} or lower (value: #{ohash.pdf_version})"]
         else

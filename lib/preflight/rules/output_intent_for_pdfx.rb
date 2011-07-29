@@ -3,9 +3,21 @@
 module Preflight
   module Rules
 
+    # Check the target PDF contains an output intent suitable for PDFX
+    #
+    # Arguments: none
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::OutputIntentForPdfx
+    #   end
+    #
     class OutputIntentForPdfx
 
-      def messages(ohash)
+      def check_hash(ohash)
         intents = output_intents(ohash).select { |dict|
           ohash.object(dict)[:S] == :GTS_PDFX
         }

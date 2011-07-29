@@ -3,14 +3,26 @@
 module Preflight
   module Rules
 
-    # ensure the info dict has the specified keys
+    # Every PDF has an optional 'Info' dictionary. Check that the target file
+    # has certain keys
+    #
+    # Arguments: the required keys
+    #
+    # Usage:
+    #
+    #   class MyPreflight
+    #     include Preflight::Profile
+    #
+    #     rule Preflight::Rules::InfoHasKeys, :Title, :CreationDate, :ModDate
+    #   end
+    #
     class InfoHasKeys
 
       def initialize(*keys)
         @keys = keys.flatten
       end
 
-      def messages(ohash)
+      def check_hash(ohash)
         info = ohash.object(ohash.trailer[:Info])
         missing = @keys - info.keys
         missing.map { |key|
