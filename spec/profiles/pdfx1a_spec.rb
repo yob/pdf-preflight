@@ -34,4 +34,7 @@ describe Preflight::Profiles::PDFX1A do
     messages.should eql(["Can't preflight an encrypted PDF"])
   end
 
+  it "should fail files that use object streams"
+  it "should fail files that use xref streams"
+
 end
