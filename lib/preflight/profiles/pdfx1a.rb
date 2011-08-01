@@ -17,7 +17,7 @@ module Preflight
       rule Preflight::Rules::NoFilespecs
       rule Preflight::Rules::OnlyEmbeddedFonts
       rule Preflight::Rules::BoxNesting
-      rule Preflight::Rules::MaxVersion, 1.4
+      rule Preflight::Rules::MaxVersion, 1.3
       rule Preflight::Rules::PrintBoxes
       rule Preflight::Rules::OutputIntentForPdfx
       rule Preflight::Rules::PdfxOutputIntentHasKeys, :OutputConditionIdentifier, :Info
