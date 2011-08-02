@@ -15,6 +15,7 @@ module Preflight
       rule Preflight::Rules::CompressionAlgorithms, :CCITTFaxDecode, :DCTDecode, :FlateDecode, :RunLengthDecode
       rule Preflight::Rules::DocumentId
       rule Preflight::Rules::NoFilespecs
+      rule Preflight::Rules::NoTransparency
       rule Preflight::Rules::OnlyEmbeddedFonts
       rule Preflight::Rules::BoxNesting
       rule Preflight::Rules::MaxVersion, 1.3
