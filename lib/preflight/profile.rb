@@ -99,7 +99,7 @@ module Preflight
 
         begin
           reader.pages.each do |page|
-            page.walk(rules_array)
+            page.walk(*rules_array)
             messages += rules_array.map(&:messages).flatten.compact
           end
         rescue PDF::Reader::UnsupportedFeatureError
