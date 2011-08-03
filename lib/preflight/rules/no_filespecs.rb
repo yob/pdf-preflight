@@ -18,7 +18,7 @@ module Preflight
     class NoFilespecs
 
       def check_hash(ohash)
-        if has_filespecs(ohash)
+        if count_filespec_dicts(ohash) > 0
           ["File uses at least 1 Filespec to refer to an external file"]
         else
           []
@@ -27,10 +27,10 @@ module Preflight
 
       private
 
-      def has_filespecs(ohash)
-        ohash.any? { |key, obj|
-          obj.is_a?(::Hash) && (obj[:Type] == :Filespec || obj[:Type] == :F) && obj[:EF].nil?
-        }
+      def count_filespec_dicts(ohash)
+        ohash.select { |key, obj|
+          obj.is_a?(::Hash) && (obj[:Type] == :Filespec || obj[:Type] == :F)
+        }.size
       end
     end
   end
