@@ -12,7 +12,7 @@ module Preflight
       rule Preflight::Rules::RootHasKeys, :OutputIntents
       rule Preflight::Rules::InfoHasKeys, :Title, :CreationDate, :ModDate
       rule Preflight::Rules::InfoSpecifiesTrapping
-      rule Preflight::Rules::CompressionAlgorithms, :CCITTFaxDecode, :DCTDecode, :FlateDecode, :RunLengthDecode
+      rule Preflight::Rules::CompressionAlgorithms, :ASCII85Decode, :CCITTFaxDecode, :DCTDecode, :FlateDecode, :RunLengthDecode
       rule Preflight::Rules::DocumentId
       rule Preflight::Rules::NoFilespecs
       rule Preflight::Rules::NoTransparency
