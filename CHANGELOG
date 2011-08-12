@@ -1,6 +1,7 @@
 v0.2.0.alpha (14th July 2011)
 - trial using new page based API in PDF::Reader
-- a few small rule tweaks and improvements
+- new rules
+- bug fixes and improvements to existing rules
 
 v0.1.1 (6th July 2011)
 - bump required version of PDF::Reader to take advantage of a more
