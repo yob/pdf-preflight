@@ -76,8 +76,8 @@ module Preflight
       def invoke_xobject(label)
         return unless @images[label]
 
-        sample_w = @images[label].hash[:Width]  || 0
-        sample_h = @images[label].hash[:Height] || 0
+        sample_w = deref(@images[label].hash[:Width])  || 0
+        sample_h = deref(@images[label].hash[:Height]) || 0
         device_w = pt2in(image_width)
         device_h = pt2in(image_height)
 
