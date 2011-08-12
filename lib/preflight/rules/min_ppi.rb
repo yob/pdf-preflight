@@ -85,7 +85,7 @@ module Preflight
         vertical_ppi   = (sample_h / device_h).round(3)
 
         if horizontal_ppi < @min_ppi || vertical_ppi < @min_ppi
-          @messages << "Image with low PPI/DPI on page #{@page_num} (h:#{horizontal_ppi} v:#{vertical_ppi})"
+          @messages << "Image with low PPI/DPI on page #{@page.number} (h:#{horizontal_ppi} v:#{vertical_ppi})"
         end
       end
 
