@@ -18,17 +18,19 @@ module Preflight
     #
     class PrintBoxes
 
-      def check_page(page)
+      attr_reader :messages
+
+      def page=(page)
         dict = page.attributes
 
         if dict[:MediaBox].nil?
-          ["every page must have a MediaBox (page #{page.number})"]
+          @messages = ["every page must have a MediaBox (page #{page.number})"]
         elsif dict[:ArtBox].nil? && dict[:TrimBox].nil?
-          ["every page must have either an ArtBox or a TrimBox (page #{page.number})"]
+          @messages = ["every page must have either an ArtBox or a TrimBox (page #{page.number})"]
         elsif dict[:ArtBox] && dict[:TrimBox]
-          ["no page can have both ArtBox and TrimBox - TrimBox is preferred (page #{page.number})"]
+          @messages = ["no page can have both ArtBox and TrimBox - TrimBox is preferred (page #{page.number})"]
         else
-          []
+          @messages = []
         end
       end
     end

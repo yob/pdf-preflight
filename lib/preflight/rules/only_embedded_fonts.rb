@@ -17,18 +17,19 @@ module Preflight
     #
     class OnlyEmbeddedFonts
 
-      def check_page(page)
-        array     = []
+      attr_reader :messages
+
+      def page=(page)
+        @messages = []
         resources = page.resources || {}
         fonts     = page.objects.deref(resources[:Font]) || {}
 
         fonts.each { |key, obj|
           obj = page.objects.deref(obj)
           if !embedded?(page.objects, obj)
-            array << "Font #{obj[:BaseFont]} is not embedded"
+            @messages << "Font #{obj[:BaseFont]} is not embedded"
           end
         }
-        array
       end
 
       private
