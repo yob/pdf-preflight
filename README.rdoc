@@ -101,11 +101,10 @@ A profile will accept any class that behaves appropriatly. If you think your
 new rule may be of general interest please send me a pull request so I can
 include it in the next release.
 
-I'm yet to document the API that a rule class must follow. There are three
-types of rules, each designed to check a different aspect of the target file
-- raw objects, page attributes and content streams. At this stage your best
-option when writing your own rule is to copy an existing rule as a starting
-point.
+I'm yet to document the API that a rule class must follow. There are two
+types of rule, each designed to check a different aspect of the target file
+- raw PDF objects and individual pages. At this stage your best option when
+writing your own rule is to copy an existing rule as a starting point.
 
 == Status
 
