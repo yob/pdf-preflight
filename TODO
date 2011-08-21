@@ -1,6 +1,6 @@
 new rules
 
-* check for PieceInfo in pages and XObjects
+* check for PieceInfo in XObjects
 * check page rotation isn't used
 * check page scaling isn't used
 
