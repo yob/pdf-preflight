@@ -23,10 +23,10 @@ module Preflight
       attr_reader :messages
 
       def page=(page)
-        media  = page.page_object[:MediaBox]
-        bleed  = page.page_object[:BleedBox]
-        trim   = page.page_object[:TrimBox]
-        art    = page.page_object[:ArtBox]
+        media  = page.attributes[:MediaBox]
+        bleed  = page.attributes[:BleedBox]
+        trim   = page.attributes[:TrimBox]
+        art    = page.attributes[:ArtBox]
 
         if media && bleed && (bleed[2] > media[2] || bleed[3] > media[3])
           @messages = ["BleedBox must be smaller than MediaBox (page #{page.number})"]
