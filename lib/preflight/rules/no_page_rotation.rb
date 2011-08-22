@@ -25,7 +25,7 @@ module Preflight
       def page=(page)
         attrs = page.attributes
 
-        if attrs[:Rotate]
+        if attrs[:Rotate] && attrs[:Rotate] != 0
           @messages = ["Page is rotated (page #{page.number})"]
         else
           @messages = []
