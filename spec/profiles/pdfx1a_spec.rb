@@ -26,8 +26,16 @@ describe Preflight::Profiles::PDFX1A do
     messages.empty?.should_not be_true
   end
 
-  it "correctly detect encrypted files with no user password" do
+  it "correctly detect encrypted files with a blank user password" do
     filename  = pdf_spec_file("encrypted")
+    preflight = Preflight::Profiles::PDFX1A.new
+    messages  = preflight.check(filename)
+
+    messages.should eql(["Can't preflight an encrypted PDF"])
+  end
+
+  it "correctly detect encrypted files with a user password" do
+    filename  = pdf_spec_file("encrypted_with_user_pass_apples")
     preflight = Preflight::Profiles::PDFX1A.new
     messages  = preflight.check(filename)
 
