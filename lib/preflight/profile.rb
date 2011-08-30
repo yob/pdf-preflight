@@ -43,8 +43,6 @@ module Preflight
         else
           raise ArgumentError, "input must be a string with a filename or an IO object"
         end
-      rescue PDF::Reader::EncryptedPDFError
-        ["Can't preflight an encrypted PDF"]
       end
 
       def rule(*args)
@@ -61,8 +59,11 @@ module Preflight
 
       def check_io(io)
         PDF::Reader.open(io) do |reader|
+          raise PDF::Reader::EncryptedPDFError if reader.objects.encrypted?
           check_pages(reader) + check_hash(reader)
         end
+      rescue PDF::Reader::EncryptedPDFError
+        ["Can't preflight an encrypted PDF"]
       end
 
       def instance_rules
