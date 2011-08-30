@@ -39,7 +39,8 @@ module Preflight
         @page    = page
         @objects = page.objects
         @stack   = [DEFAULT_GRAPHICS_STATE]
-        @images  = extract_images
+        @xobjects = @page.xobjects || {}
+        @form_xobjects = {}
       end
 
       def save_graphics_state
@@ -74,10 +75,42 @@ module Preflight
       # space it's being crammed into and therefore the PPI.
       #
       def invoke_xobject(label)
-        return unless @images[label]
+        save_graphics_state
+        xobject = @objects.deref(xobject(label))
 
-        sample_w = deref(@images[label].hash[:Width])  || 0
-        sample_h = deref(@images[label].hash[:Height]) || 0
+        matrix = xobject.hash[:Matrix]
+        concatenate_matrix(*matrix) if matrix
+
+        case xobject.hash[:Subtype]
+        when :Form  then invoke_form_xobject(label)
+        when :Image then invoke_image_xobject(label)
+        else
+          # ignore other xobject types for now
+        end
+
+        restore_graphics_state
+      end
+
+      private
+
+      def xobject(label)
+        deref(@form_xobjects[label] || @xobjects[label])
+      end
+
+      def invoke_form_xobject(label)
+        return unless xobject(label)
+        xobject = @objects.deref(xobject(label))
+        form = PDF::Reader::FormXObject.new(@page, xobject)
+        @form_xobjects = (form.resources || {})[:XObject] || {}
+        form.walk(self)
+        @form_xobjects = {}
+      end
+
+      def invoke_image_xobject(label)
+        return unless xobject(label)
+
+        sample_w = deref(xobject(label).hash[:Width])  || 0
+        sample_h = deref(xobject(label).hash[:Height]) || 0
         device_w = pt2in(image_width)
         device_h = pt2in(image_height)
 
@@ -87,24 +120,6 @@ module Preflight
         if horizontal_ppi < @min_ppi || vertical_ppi < @min_ppi
           @messages << "Image with low PPI/DPI on page #{@page.number} (h:#{horizontal_ppi} v:#{vertical_ppi})"
         end
-      end
-
-      private
-
-      def extract_images
-        return {} unless @page.is_a?(PDF::Reader::Page)
-
-        resources = deref(@page.attributes[:Resources]) || {}
-        xobjects  = resources[:XObject] || {}
-        images    = {}
-
-        xobjects.select { |key, obj|
-          obj = deref(obj)
-          obj.respond_to?(:hash) && obj.hash[:Subtype] == :Image
-        }.each { |key, obj|
-          images[key] = deref(obj)
-        }
-        images
       end
 
       def deref(obj)

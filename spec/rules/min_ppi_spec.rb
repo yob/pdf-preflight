@@ -32,6 +32,16 @@ describe Preflight::Rules::MinPpi do
     end
   end
 
+  it "fail files with a 150ppi raster image within a Form XObject" do
+    filename = pdf_spec_file("low_ppi_image_within_form_xobject")
+    rule     = Preflight::Rules::MinPpi.new(200)
+
+    PDF::Reader.open(filename) do |reader|
+      reader.page(1).walk(rule)
+      rule.messages.should_not be_empty
+    end
+  end
+
   it "pass files with no raster images that use a Form XObject" do
     filename = pdf_spec_file("form_xobject")
     rule     = Preflight::Rules::MinPpi.new(300)
