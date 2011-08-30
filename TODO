@@ -2,6 +2,8 @@ new rules
 
 * check for PieceInfo in XObjects
 * check page scaling isn't used
+* new rule to check for bleed issues. graphics, text and images that are close
+  to the TrimBox should extend out for XXmm
 
 * upate page width/height rules to account for page scaling
 * upate page width/height rules to account for page rotation
