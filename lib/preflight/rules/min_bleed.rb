@@ -109,10 +109,10 @@ module Preflight
 
       def append_rectangle(x1, y1, x2, y2)
         @path ||= []
-        @path << Point.new(x1, y1)
-        @path << Point.new(x1, y2)
-        @path << Point.new(x2, y1)
-        @path << Point.new(x2, y2)
+        @path << transform(Point.new(x1, y1))
+        @path << transform(Point.new(x1, y2))
+        @path << transform(Point.new(x2, y1))
+        @path << transform(Point.new(x2, y2))
       end
 
       def fill_path_with_nonzero
