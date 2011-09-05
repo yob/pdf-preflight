@@ -125,12 +125,17 @@ module Preflight
 
         @path = []
       end
+      alias :fill_path_with_even_odd :fill_path_with_nonzero
 
       def close_and_stroke_path
         @path = []
       end
 
       def stroke_path
+        @path = []
+      end
+
+      def end_path
         @path = []
       end
 
