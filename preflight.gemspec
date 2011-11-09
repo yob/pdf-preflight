@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">=1.3.2"
   s.required_ruby_version = ">=1.8.7"
 
-  s.add_dependency("pdf-reader", ">=0.12.0.alpha")
+  s.add_dependency("pdf-reader", ">=1.0.0.beta1")
 
   s.add_development_dependency("rake")
   s.add_development_dependency("roodi")
