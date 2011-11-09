@@ -21,10 +21,8 @@ module Preflight
 
       def page=(page)
         @messages = []
-        resources = page.resources || {}
-        fonts     = page.objects.deref(resources[:Font]) || {}
 
-        fonts.each { |key, obj|
+        page.fonts.each { |key, obj|
           obj = page.objects.deref(obj)
           if !embedded?(page.objects, obj)
             @messages << "Font #{obj[:BaseFont]} is not embedded"

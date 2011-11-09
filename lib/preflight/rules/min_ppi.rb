@@ -101,7 +101,7 @@ module Preflight
         return unless xobject(label)
         xobject = @objects.deref(xobject(label))
         form = PDF::Reader::FormXObject.new(@page, xobject)
-        @form_xobjects = (form.resources || {})[:XObject] || {}
+        @form_xobjects = form.xobjects
         form.walk(self)
         @form_xobjects = {}
       end
