@@ -7,7 +7,7 @@ module Preflight
 
     def initialize(description, rule, attributes = {})
       @description = description
-      @rule        = rule.to_s.to_sym
+      @rule        = rule.class.to_s.to_sym
       @attributes  = attributes
     end
 
