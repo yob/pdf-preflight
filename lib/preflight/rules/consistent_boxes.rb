@@ -17,9 +17,9 @@ module Preflight
     #
     class ConsistentBoxes
 
-      # each page box MUST be within .02 PDF points of the same box
+      # each page box MUST be within .03 PDF points of the same box
       # on all other pages
-      TOLERANCE = (BigDecimal.new("-0.02")..BigDecimal.new("0.02"))
+      TOLERANCE = (BigDecimal.new("-0.03")..BigDecimal.new("0.03"))
 
       attr_reader :messages
 
