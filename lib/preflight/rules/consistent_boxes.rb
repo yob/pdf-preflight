@@ -17,6 +17,10 @@ module Preflight
     #
     class ConsistentBoxes
 
+      # each page box MUST be within .02 PDF points of the same box
+      # on all other pages
+      TOLERANCE = (BigDecimal.new("-0.02")..BigDecimal.new("0.02"))
+
       attr_reader :messages
 
       def initialize
@@ -33,31 +37,39 @@ module Preflight
         @boxes[:TrimBox]  ||= dict[:TrimBox]
         @boxes[:ArtBox]   ||= dict[:ArtBox]
 
-        if round_off(@boxes[:MediaBox]) != round_off(dict[:MediaBox])
+        unless subtract_all(@boxes[:MediaBox], dict[:MediaBox]).all? { |diff| TOLERANCE.include?(diff) }
           @messages << "MediaBox must be consistent across every page (page #{page.number})"
         end
 
-        if round_off(@boxes[:CropBox]) != round_off(dict[:CropBox])
+        unless subtract_all(@boxes[:CropBox], dict[:CropBox]).all? { |diff| TOLERANCE.include?(diff) }
           @messages << "CropBox must be consistent across every page (page #{page.number})"
         end
 
-        if round_off(@boxes[:BleedBox]) != round_off(dict[:BleedBox])
+        unless subtract_all(@boxes[:BleedBox], dict[:BleedBox]).all? { |diff| TOLERANCE.include?(diff) }
           @messages << "BleedBox must be consistent across every page (page #{page.number})"
         end
 
-        if round_off(@boxes[:TrimBox]) != round_off(dict[:TrimBox])
+        unless subtract_all(@boxes[:TrimBox], dict[:TrimBox]).all? { |diff| TOLERANCE.include?(diff) }
           @messages << "TrimBox must be consistent across every page (page #{page.number})"
         end
 
-        if round_off(@boxes[:ArtBox]) != round_off(dict[:ArtBox])
+        unless subtract_all(@boxes[:ArtBox], dict[:ArtBox]).all? { |diff| TOLERANCE.include?(diff) }
           @messages << "ArtBox must be consistent across every page (page #{page.number})"
         end
       end
 
       private
 
-      def round_off(*arr)
-        arr.flatten.compact.map { |n| n.round(2) }
+      def subtract_all(one, two)
+        one ||= [0, 0, 0, 0]
+        two ||= [0, 0, 0, 0]
+
+        [
+          one[0] - two[0],
+          one[1] - two[1],
+          one[2] - two[2],
+          one[3] - two[3]
+        ]
       end
     end
   end
