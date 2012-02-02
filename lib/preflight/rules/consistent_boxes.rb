@@ -17,8 +17,6 @@ module Preflight
     #
     class ConsistentBoxes
 
-      TOLERANCE = (BigDecimal.new("-0.02")..BigDecimal.new("0.02"))
-
       attr_reader :messages
 
       def initialize
@@ -35,44 +33,28 @@ module Preflight
         @boxes[:TrimBox]  ||= dict[:TrimBox]
         @boxes[:ArtBox]   ||= dict[:ArtBox]
 
-        unless check_boxes(@boxes[:MediaBox], dict[:MediaBox])
+        if round_off(@boxes[:MediaBox]) != round_off(dict[:MediaBox])
           @messages << "MediaBox must be consistent across every page (page #{page.number})"
         end
 
-        unless check_boxes(@boxes[:CropBox], dict[:CropBox])
+        if round_off(@boxes[:CropBox]) != round_off(dict[:CropBox])
           @messages << "CropBox must be consistent across every page (page #{page.number})"
         end
-        unless check_boxes(@boxes[:BleedBox], dict[:BleedBox])
+
+        if round_off(@boxes[:BleedBox]) != round_off(dict[:BleedBox])
           @messages << "BleedBox must be consistent across every page (page #{page.number})"
         end
 
-        unless check_boxes(@boxes[:TrimBox], dict[:TrimBox])
+        if round_off(@boxes[:TrimBox]) != round_off(dict[:TrimBox])
           @messages << "TrimBox must be consistent across every page (page #{page.number})"
         end
 
-        unless check_boxes(@boxes[:ArtBox], dict[:ArtBox])
+        if round_off(@boxes[:ArtBox]) != round_off(dict[:ArtBox])
           @messages << "ArtBox must be consistent across every page (page #{page.number})"
         end
       end
 
       private
-
-      def check_boxes(first, second)
-        TOLERANCE.include?(width(first) - width(second)) &&
-          TOLERANCE.include?(height(first) - height(second))
-      end
-
-      def width(box)
-        return 0 if box.nil?
-
-        box[2] - box[0]
-      end
-
-      def height(box)
-        return 0 if box.nil?
-
-        box[3] - box[1]
-      end
 
       def round_off(*arr)
         arr.flatten.compact.map { |n| n.round(2) }
