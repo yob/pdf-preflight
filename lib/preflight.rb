@@ -1,6 +1,7 @@
 require 'pdf/reader'
 
 require 'preflight/measurements'
+require 'preflight/issue'
 require 'preflight/profile'
 
 require 'preflight/rules'
