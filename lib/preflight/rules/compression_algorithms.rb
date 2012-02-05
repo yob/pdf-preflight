@@ -25,7 +25,7 @@ module Preflight
         algorithms = banned_algorithms(ohash)
 
         if algorithms.size > 0
-          ["File uses excluded compression algorithm (#{algorithms.join(", ")})"]
+          [Issue.new("File uses excluded compression algorithm", self, :algorithms => algorithms)]
         else
           []
         end

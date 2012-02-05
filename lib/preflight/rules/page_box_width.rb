@@ -26,7 +26,7 @@ module Preflight
     class PageBoxWidth
       include Preflight::Measurements
 
-      attr_reader :messages
+      attr_reader :issues
 
       def initialize(box, width, units)
         @box, @units = box, units
@@ -40,14 +40,14 @@ module Preflight
       end
 
       def page=(page)
-        @messages = []
+        @issues = []
         dict = page.attributes
 
         if dict[@box]
           box_width  = dict[@box][2] - dict[@box][0]
 
           if !@width.include?(box_width)
-            @messages << "#{@box} width must be #{@orig_width}#{@units} (page #{page.number})"
+            @issues << Issue.new("#{@box} width must be #{@orig_width}#{@units}", self, :page => page.number)
           end
         end
       end

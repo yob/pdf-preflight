@@ -29,7 +29,7 @@ module Preflight
     #
     class MaxInkDensity
 
-      attr_reader :messages
+      attr_reader :issues
 
       def initialize(max_ink)
         @max_ink = max_ink.to_i
@@ -38,7 +38,7 @@ module Preflight
       # we're about to start a new page, reset state
       #
       def page=(page)
-        @messages = []
+        @issues = []
         @page    = page
         @objects = page.objects
       end
@@ -55,8 +55,8 @@ module Preflight
 
       def check_ink(c, m, y, k)
         ink = (c + m + y + k) * 100.0
-        if ink > @max_ink && @messages.empty?
-          @messages << "Ink density on page #{@page.number} too high (c: #{c}, m: #{m}, y: #{y}, k: #{k})"
+        if ink > @max_ink && @issues.empty?
+          @issues << Issue.new("Ink density too high (c: #{c}, m: #{m}, y: #{y}, k: #{k})", self, :page => @page.number)
         end
       end
     end

@@ -8,7 +8,7 @@ describe Preflight::Rules::OnlyEmbeddedFonts do
 
     PDF::Reader.open(filename) do |reader|
       reader.page(1).walk(rule)
-      rule.messages.should be_empty
+      rule.issues.should be_empty
     end
   end
 
@@ -18,7 +18,7 @@ describe Preflight::Rules::OnlyEmbeddedFonts do
 
     PDF::Reader.open(filename) do |reader|
       reader.page(1).walk(rule)
-      rule.messages.should be_empty
+      rule.issues.should be_empty
     end
   end
 
@@ -32,7 +32,7 @@ describe Preflight::Rules::OnlyEmbeddedFonts do
 
     PDF::Reader.open(filename) do |reader|
       reader.page(1).walk(rule)
-      rule.messages.should_not be_empty
+      rule.issues.should_not be_empty
     end
   end
 end

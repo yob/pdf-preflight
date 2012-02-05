@@ -20,7 +20,7 @@ module Preflight
     #
     class BoxNesting
 
-      attr_reader :messages
+      attr_reader :issues
 
       def page=(page)
         media  = page.attributes[:MediaBox]
@@ -29,17 +29,17 @@ module Preflight
         art    = page.attributes[:ArtBox]
 
         if media && bleed && (bleed[2] > media[2] || bleed[3] > media[3])
-          @messages = ["BleedBox must be smaller than MediaBox (page #{page.number})"]
+          @issues = [Issue.new("BleedBox must be smaller than MediaBox", self, :page => page.number)]
         elsif trim && bleed && (trim[2] > bleed[2] || trim[3] > bleed[3])
-          @messages = ["TrimBox must be smaller than BleedBox (page #{page.number})"]
+          @issues = [Issue.new("TrimBox must be smaller than BleedBox", self, :page => page.number)]
         elsif art && bleed && (art[2] > bleed[2] || art[3] > bleed[3])
-          @messages = ["ArtBox must be smaller than BleedBox (page #{page.number})"]
+          @issues = [Issue.new("ArtBox must be smaller than BleedBox", self, :page => page.number)]
         elsif trim && media && (trim[2] > media[2] || trim[3] > media[3])
-          @messages = ["TrimBox must be smaller than MediaBox (page #{page.number})"]
+          @issues = [Issue.new("TrimBox must be smaller than MediaBox", self, :page => page.number)]
         elsif art && media && (art[2] > media[2] || art[3] > media[3])
-          @messages = ["ArtBox must be smaller than MediaBox (page #{page.number})"]
+          @issues = [Issue.new("ArtBox must be smaller than MediaBox", self, :page => page.number)]
         else
-          @messages = []
+          @issues = []
         end
       end
     end

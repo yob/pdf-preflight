@@ -20,15 +20,15 @@ module Preflight
     #
     class NoPageRotation
 
-      attr_reader :messages
+      attr_reader :issues
 
       def page=(page)
         attrs = page.attributes
 
         if attrs[:Rotate] && attrs[:Rotate] != 0
-          @messages = ["Page is rotated (page #{page.number})"]
+          @issues = [Issue.new("Page is rotated", self, :page => page.number)]
         else
-          @messages = []
+          @issues = []
         end
       end
     end

@@ -21,9 +21,9 @@ module Preflight
         info = ohash.object(ohash.trailer[:Info])
 
         if !info.has_key?(:Trapped)
-          [ "Info dict does not specify Trapped" ]
+          [ Issue.new("Info dict does not specify Trapped", self) ]
         elsif info[:Trapped] != :True && info[:Trapped] != :False
-          [ "Trapped value of Info dict must be True or False" ]
+          [ Issue.new("Trapped value of Info dict must be True or False", self) ]
         else
           []
         end

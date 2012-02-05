@@ -21,15 +21,15 @@ module Preflight
     #
     class NoPrivateData
 
-      attr_reader :messages
+      attr_reader :issues
 
       def page=(page)
         attrs = page.attributes
 
         if attrs[:PieceInfo]
-          @messages = ["Page contains private PieceInfo data (page #{page.number})"]
+          @issues = [Issue.new("Page contains private PieceInfo data", self, :page => page.number)]
         else
-          @messages = []
+          @issues = []
         end
       end
     end

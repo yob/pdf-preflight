@@ -26,7 +26,7 @@ module Preflight
     class PageBoxHeight
       include Preflight::Measurements
 
-      attr_reader :messages
+      attr_reader :issues
 
       def initialize(box, height, units)
         @box, @units = box, units
@@ -40,14 +40,14 @@ module Preflight
       end
 
       def page=(page)
-        @messages = []
+        @issues = []
         dict = page.attributes
 
         if dict[@box]
           box_height  = dict[@box][3] - dict[@box][1]
 
           if !@height.include?(box_height)
-            @messages << "#{@box} height must be #{@orig_height}#{@units} (page #{page.number})"
+            @issues << Issue.new("#{@box} height must be #{@orig_height}#{@units}", self, :page => page.number)
           end
         end
       end

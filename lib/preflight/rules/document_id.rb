@@ -18,7 +18,7 @@ module Preflight
 
       def check_hash(ohash)
         if ohash.trailer[:ID].nil?
-          ["Document ID missing"]
+          [Issue.new("Document ID missing", self)]
         else
           []
         end

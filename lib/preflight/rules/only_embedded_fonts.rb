@@ -17,15 +17,15 @@ module Preflight
     #
     class OnlyEmbeddedFonts
 
-      attr_reader :messages
+      attr_reader :issues
 
       def page=(page)
-        @messages = []
+        @issues = []
 
         page.fonts.each { |key, obj|
           obj = page.objects.deref(obj)
           if !embedded?(page.objects, obj)
-            @messages << "Font #{obj[:BaseFont]} is not embedded"
+            @issues << Issue.new("Font not embedded", self, :font_name => obj[:BaseFont])
           end
         }
       end

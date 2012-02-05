@@ -27,7 +27,7 @@ module Preflight
     class MinBleed
       include Preflight::Measurements
 
-      attr_reader :messages
+      attr_reader :issues
 
       DEFAULT_GRAPHICS_STATE = {
         :ctm => Matrix.identity(3)
@@ -40,7 +40,7 @@ module Preflight
       # we're about to start a new page, reset state
       #
       def page=(page)
-        @messages = []
+        @issues = []
         @page    = page
         @objects = page.objects
         @stack   = [DEFAULT_GRAPHICS_STATE]
@@ -120,7 +120,7 @@ module Preflight
         points = select_points_in_danger_zone(@path)
 
         if points.size > 0
-          @messages << "Filled object with insufficient bleed on page #{@page.number} (#{@bleed}#{@units} required)"
+          @issues << Issue.new("Filled object with insufficient bleed", self, :page => @page.number, :extra => "#{@bleed}#{@units} required")
         end
 
         @path = []
@@ -161,7 +161,7 @@ module Preflight
         points = select_points_in_danger_zone(image_points)
 
         if points.size > 0
-          @messages << "Image with insufficient bleed on page #{@page.number} (#{@bleed}#{@units} required)"
+          @issues << Issue.new("Image with insufficient bleed", self, :page => @page.number, :extra => "#{@bleed}#{@units} required")
         end
       end
 

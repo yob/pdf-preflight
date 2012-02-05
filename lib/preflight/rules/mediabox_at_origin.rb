@@ -19,14 +19,14 @@ module Preflight
     #
     class MediaboxAtOrigin
 
-      attr_reader :messages
+      attr_reader :issues
 
       def page=(page)
-        @messages = []
+        @issues = []
         dict = page.attributes
 
         if round_off(dict[:MediaBox][0,2]) != [0,0]
-          @messages << "MediaBox must begin at 0,0 (page #{page.number})"
+          @issues << Issue.new("MediaBox must begin at 0,0", self, :page => page.number)
         end
       end
 

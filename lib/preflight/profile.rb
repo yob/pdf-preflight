@@ -84,17 +84,17 @@ module Preflight
 
       def check_pages(reader)
         rules_array = page_rules
-        messages    = []
+        issues    = []
 
         begin
           reader.pages.each do |page|
             page.walk(*rules_array)
-            messages += rules_array.map(&:messages).flatten.compact
+            issues += rules_array.map(&:issues).flatten.compact
           end
         rescue PDF::Reader::UnsupportedFeatureError
           nil
         end
-        messages
+        issues
       end
 
       def hash_rules
@@ -108,7 +108,7 @@ module Preflight
 
       def page_rules
         all_rules.select { |arr|
-          arr.first.instance_methods.map(&:to_sym).include?(:messages)
+          arr.first.instance_methods.map(&:to_sym).include?(:issues)
         }.map { |arr|
           klass = arr[0]
           klass.new(*arr[1,10])

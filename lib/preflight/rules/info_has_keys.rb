@@ -26,7 +26,7 @@ module Preflight
         info = ohash.object(ohash.trailer[:Info])
         missing = @keys - info.keys
         missing.map { |key|
-          "Info dict missing required key #{key}"
+          Issue.new("Info dict missing required key", self, :key => key)
         }
       end
     end

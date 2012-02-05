@@ -22,7 +22,7 @@ module Preflight
     class MinPpi
       include Preflight::Measurements
 
-      attr_reader :messages
+      attr_reader :issues
 
       DEFAULT_GRAPHICS_STATE = {
         :ctm => Matrix.identity(3)
@@ -35,7 +35,7 @@ module Preflight
       # we're about to start a new page, reset state
       #
       def page=(page)
-        @messages = []
+        @issues = []
         @page    = page
         @objects = page.objects
         @stack   = [DEFAULT_GRAPHICS_STATE]
@@ -118,7 +118,9 @@ module Preflight
         vertical_ppi   = (sample_h / device_h).round(3)
 
         if horizontal_ppi < @min_ppi || vertical_ppi < @min_ppi
-          @messages << "Image with low PPI/DPI on page #{@page.number} (h:#{horizontal_ppi} v:#{vertical_ppi})"
+          @issues << Issue.new("Image with low PPI/DPI", self, :page           => @page.number,
+                                                               :horizontal_ppi => horizontal_ppi,
+                                                               :vertical_ppi   => vertical_ppi)
         end
       end
 

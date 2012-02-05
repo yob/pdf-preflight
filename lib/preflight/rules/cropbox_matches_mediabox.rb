@@ -17,14 +17,14 @@ module Preflight
     #
     class CropboxMatchesMediabox
 
-      attr_reader :messages
+      attr_reader :issues
 
       def page=(page)
-        @messages = []
+        @issues = []
         dict = page.attributes
 
         if dict[:CropBox] && round_off(dict[:CropBox]) != round_off(dict[:MediaBox])
-          @messages << "CropBox must match MediaBox (page #{page.number})"
+          @issues << Issue.new("CropBox must match MediaBox", self, :page => page.number)
         end
       end
 

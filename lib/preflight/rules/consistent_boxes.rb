@@ -21,14 +21,14 @@ module Preflight
       # on all other pages
       TOLERANCE = (BigDecimal.new("-0.03")..BigDecimal.new("0.03"))
 
-      attr_reader :messages
+      attr_reader :issues
 
       def initialize
         @boxes = {}
       end
 
       def page=(page)
-        @messages = []
+        @issues = []
         dict = page.attributes
 
         @boxes[:MediaBox] ||= dict[:MediaBox]
@@ -38,23 +38,23 @@ module Preflight
         @boxes[:ArtBox]   ||= dict[:ArtBox]
 
         unless subtract_all(@boxes[:MediaBox], dict[:MediaBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @messages << "MediaBox must be consistent across every page (page #{page.number})"
+          @issues << Issue.new("MediaBox must be consistent across every page", self, :page => page.number)
         end
 
         unless subtract_all(@boxes[:CropBox], dict[:CropBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @messages << "CropBox must be consistent across every page (page #{page.number})"
+          @issues << Issue.new("CropBox must be consistent across every page", self, :page => page.number)
         end
 
         unless subtract_all(@boxes[:BleedBox], dict[:BleedBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @messages << "BleedBox must be consistent across every page (page #{page.number})"
+          @issues << Issue.new("BleedBox must be consistent across every page", self, :page => page.number)
         end
 
         unless subtract_all(@boxes[:TrimBox], dict[:TrimBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @messages << "TrimBox must be consistent across every page (page #{page.number})"
+          @issues << Issue.new("ArtBox must be consistent across every page", self, :page => page.number)
         end
 
         unless subtract_all(@boxes[:ArtBox], dict[:ArtBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @messages << "ArtBox must be consistent across every page (page #{page.number})"
+          @issues << Issue.new("ArtBox must be consistent across every page", self, :page => page.number)
         end
       end
 

@@ -26,7 +26,7 @@ module Preflight
         root = ohash.object(ohash.trailer[:Root])
         missing = @keys - root.keys
         missing.map { |key|
-          "Root dict missing required key #{key}"
+          Issue.new("Root dict missing required key #{key}", self, :key => key)
         }
       end
     end
