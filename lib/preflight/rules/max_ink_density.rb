@@ -7,7 +7,7 @@ module Preflight
   module Rules
 
     # Most CMYK printers will have a stated upper tolerance for ink density. If
-    # the total percentage of the 4 components (C, M, Y and K) is over that 
+    # the total percentage of the 4 components (C, M, Y and K) is over that
     # tolerance then the result can be unpredictable and often ugly.
     #
     # Use this rule to detect CMYK ink densities over a certain threshold.
@@ -56,7 +56,11 @@ module Preflight
       def check_ink(c, m, y, k)
         ink = (c + m + y + k) * 100.0
         if ink > @max_ink && @issues.empty?
-          @issues << Issue.new("Ink density too high (c: #{c}, m: #{m}, y: #{y}, k: #{k})", self, :page => @page.number)
+          @issues << Issue.new("Ink density too high", self, :page    => @page.number,
+                                                             :cyan    => c,
+                                                             :magenta => m,
+                                                             :yellow  => y,
+                                                             :k       => k)
         end
       end
     end

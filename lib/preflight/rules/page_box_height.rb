@@ -47,7 +47,10 @@ module Preflight
           box_height  = dict[@box][3] - dict[@box][1]
 
           if !@height.include?(box_height)
-            @issues << Issue.new("#{@box} height must be #{@orig_height}#{@units}", self, :page => page.number)
+            @issues << Issue.new("#{@box} height must be #{@orig_height}#{@units}", self, :page   => page.number,
+                                                                                          :box    => @box,
+                                                                                          :height => @orig_height,
+                                                                                          :units  => @units)
           end
         end
       end

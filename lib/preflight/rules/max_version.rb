@@ -23,7 +23,8 @@ module Preflight
 
       def check_hash(ohash)
         if ohash.pdf_version > @max_version
-          [Issue.new("PDF version should be #{@max_version} or lower", self)]
+          [Issue.new("PDF version should be #{@max_version} or lower", self, :max_version     => @max_version,
+                                                                             :current_version => ohash.pdf_version)]
         else
           []
         end

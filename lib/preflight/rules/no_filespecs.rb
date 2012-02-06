@@ -18,8 +18,9 @@ module Preflight
     class NoFilespecs
 
       def check_hash(ohash)
-        if count_filespec_dicts(ohash) > 0
-          [Issue.new("File uses at least 1 Filespec to refer to an external file", self)]
+        filespecs_count = count_filespec_dicts(ohash)
+        if filespecs_count > 0
+          [Issue.new("File uses at least 1 Filespec to refer to an external file", self, :filespecs_count => filespecs_count)]
         else
           []
         end

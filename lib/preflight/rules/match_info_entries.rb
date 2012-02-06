@@ -28,7 +28,8 @@ module Preflight
           if !info.has_key?(key)
             array << Issue.new("Info dict missing required key", self, :key => key)
           elsif !info[key].to_s.match(regexp)
-            array << Issue.new("value of Info entry #{key} doesn't match #{regexp}", self)
+            array << Issue.new("value of Info entry #{key} doesn't match #{regexp}", self, :key    => key,
+                                                                                           :regexp => regexp)
           end
         end
         array

@@ -23,7 +23,7 @@ module Preflight
         ohash.each do |key, obj|
           next unless obj.is_a?(::Hash) && obj[:Type] == :Font
           if subset?(obj)
-            array << Issue.new("Font partially subseted", self, :font_name => obj[:BaseFont])
+            array << Issue.new("Font partially subseted", self, :base_font => obj[:BaseFont])
           end
         end
         array

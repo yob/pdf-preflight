@@ -118,9 +118,15 @@ module Preflight
         vertical_ppi   = (sample_h / device_h).round(3)
 
         if horizontal_ppi < @min_ppi || vertical_ppi < @min_ppi
+          top_left     = transform(Point.new(0, 1))
+          bottom_right = transform(Point.new(1, 0))
           @issues << Issue.new("Image with low PPI/DPI", self, :page           => @page.number,
                                                                :horizontal_ppi => horizontal_ppi,
-                                                               :vertical_ppi   => vertical_ppi)
+                                                               :vertical_ppi   => vertical_ppi,
+                                                               :top            => top_left.y,
+                                                               :left           => top_left.x,
+                                                               :bottom         => bottom_right.y,
+                                                               :right          => bottom_right.x)
         end
       end
 

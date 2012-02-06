@@ -25,7 +25,7 @@ module Preflight
         page.fonts.each { |key, obj|
           obj = page.objects.deref(obj)
           if !embedded?(page.objects, obj)
-            @issues << Issue.new("Font not embedded", self, :font_name => obj[:BaseFont])
+            @issues << Issue.new("Font not embedded", self, :base_font => obj[:BaseFont])
           end
         }
       end

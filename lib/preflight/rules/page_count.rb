@@ -43,7 +43,7 @@ module Preflight
 
       def check_numeric(count)
         if count != @pattern
-          [Issue.new("Page count must equal #{@pattern}", self)]
+          [Issue.new("Page count must equal #{@pattern}", self, :pattern => :invalid, :count => count)]
         else
           []
         end
@@ -51,7 +51,7 @@ module Preflight
 
       def check_range(count)
         if !@pattern.include?(count)
-          [Issue.new("Page count must be between #{@pattern.min} and #{@pattern.max}", self)]
+          [Issue.new("Page count must be between #{@pattern.min} and #{@pattern.max}", self, :pattern => @pattern, :count => count)]
         else
           []
         end
@@ -59,7 +59,7 @@ module Preflight
 
       def check_even(count)
         if count.odd?
-          [Issue.new("Page count must be an even number", self)]
+          [Issue.new("Page count must be an even number", self, :pattern => @pattern, :count => count)]
         else
           []
         end
@@ -67,7 +67,7 @@ module Preflight
 
       def check_odd(count)
         if count.even?
-          [Issue.new("Page count must be an odd number", self)]
+          [Issue.new("Page count must be an odd number", self, :pattern => @pattern, :count => count)]
         else
           []
         end

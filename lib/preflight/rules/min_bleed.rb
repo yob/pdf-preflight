@@ -120,7 +120,10 @@ module Preflight
         points = select_points_in_danger_zone(@path)
 
         if points.size > 0
-          @issues << Issue.new("Filled object with insufficient bleed", self, :page => @page.number, :extra => "#{@bleed}#{@units} required")
+          @issues << Issue.new("Filled object with insufficient bleed", self, :page        => @page.number,
+                                                                              :object_type => :filled_object,
+                                                                              :bleed       => @bleed,
+                                                                              :units       => @units)
         end
 
         @path = []
@@ -161,7 +164,10 @@ module Preflight
         points = select_points_in_danger_zone(image_points)
 
         if points.size > 0
-          @issues << Issue.new("Image with insufficient bleed", self, :page => @page.number, :extra => "#{@bleed}#{@units} required")
+          @issues << Issue.new("Image with insufficient bleed", self, :page        => @page.number,
+                                                                      :object_type => :image,
+                                                                      :bleed       => @bleed,
+                                                                      :units       => @units)
         end
       end
 
