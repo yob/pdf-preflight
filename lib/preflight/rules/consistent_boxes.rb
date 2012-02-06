@@ -37,24 +37,11 @@ module Preflight
         @boxes[:TrimBox]  ||= dict[:TrimBox]
         @boxes[:ArtBox]   ||= dict[:ArtBox]
 
-        unless subtract_all(@boxes[:MediaBox], dict[:MediaBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @issues << Issue.new("MediaBox must be consistent across every page", self, :page => page.number)
-        end
-
-        unless subtract_all(@boxes[:CropBox], dict[:CropBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @issues << Issue.new("CropBox must be consistent across every page", self, :page => page.number)
-        end
-
-        unless subtract_all(@boxes[:BleedBox], dict[:BleedBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @issues << Issue.new("BleedBox must be consistent across every page", self, :page => page.number)
-        end
-
-        unless subtract_all(@boxes[:TrimBox], dict[:TrimBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @issues << Issue.new("ArtBox must be consistent across every page", self, :page => page.number)
-        end
-
-        unless subtract_all(@boxes[:ArtBox], dict[:ArtBox]).all? { |diff| TOLERANCE.include?(diff) }
-          @issues << Issue.new("ArtBox must be consistent across every page", self, :page => page.number)
+        %w(MediaBox CropBox BleedBox TrimBox ArtBox).map(&:to_sym).each do |box_type|
+          unless subtract_all(@boxes[box_type], dict[box_type]).all? { |diff| TOLERANCE.include?(diff) }
+            @issues << Issue.new("#{box_type} must be consistent across every page", self, :page_number      => page.number,
+                                                                                           :inconsistent_box => box_type)
+          end
         end
       end
 
