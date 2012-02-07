@@ -25,18 +25,19 @@ module Preflight
       # we're about to start a new page, reset state
       #
       def page=(page)
-        @issues = []
-        @page    = page
-        @objects = page.objects
+        @issues   = []
+        @page     = page
+        @objects  = page.objects
+        @xobjects = @page.xobjects
       end
 
       # As each xobject is drawn on the canvas, record if it's Group XObject
       # with transparency
       #
       def invoke_xobject(label)
-        xobj  = deref(@page.xobjects[label])
-        group = deref(xobj.hash[:Group])     if xobj
-        stype = deref(group[:S])             if group
+        xobj  = deref(@xobjects[label])
+        group = deref(xobj.hash[:Group]) if xobj
+        stype = deref(group[:S])         if group
 
         if stype == :Transparency
           @issues << Issue.new("Transparent xobject found", self, :page => @page.number)
