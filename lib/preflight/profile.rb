@@ -49,6 +49,10 @@ module Preflight
         instance_rules << args.flatten
       end
 
+      def cache_stats
+        @cache_stats || {}
+      end
+
       private
 
       def check_filename(filename)
@@ -60,7 +64,9 @@ module Preflight
       def check_io(io)
         PDF::Reader.open(io) do |reader|
           raise PDF::Reader::EncryptedPDFError if reader.objects.encrypted?
-          check_pages(reader) + check_hash(reader)
+          issues = check_pages(reader) + check_hash(reader)
+          @cache_stats = reader.objects.cache_stats
+          issues
         end
       rescue PDF::Reader::EncryptedPDFError
         ["Can't preflight an encrypted PDF"]
