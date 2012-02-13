@@ -39,7 +39,7 @@ module Preflight
 
         %w(MediaBox CropBox BleedBox TrimBox ArtBox).map(&:to_sym).each do |box_type|
           unless subtract_all(@boxes[box_type], dict[box_type]).all? { |diff| TOLERANCE.include?(diff) }
-            @issues << Issue.new("#{box_type} must be consistent across every page", self, :page_number      => page.number,
+            @issues << Issue.new("#{box_type} must be consistent across every page", self, :page             => page.number,
                                                                                            :inconsistent_box => box_type)
           end
         end
