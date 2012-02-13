@@ -32,7 +32,7 @@ module Preflight
       private
 
       def subset?(font)
-        font[:BaseFont] && font[:BaseFont].match(/.+\+.+/)
+        font[:BaseFont] && font[:BaseFont].to_s[/.+\+.+/]
       end
     end
   end

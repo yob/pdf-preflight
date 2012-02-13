@@ -1,5 +1,7 @@
 # coding: utf-8
 
+require 'bigdecimal'
+
 module Preflight
   module Rules
 
@@ -33,7 +35,7 @@ module Preflight
       private
 
       def round_off(*arr)
-        arr.flatten.compact.map { |n| n.round(2) }
+        arr.flatten.compact.map { |n| BigDecimal.new(n.to_s).round(2) }
       end
     end
   end
