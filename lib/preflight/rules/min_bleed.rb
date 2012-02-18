@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require 'yaml'
+require 'forwardable'
 require 'matrix'
 
 module Preflight
