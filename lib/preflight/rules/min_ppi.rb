@@ -21,12 +21,15 @@ module Preflight
     #
     class MinPpi
       include Preflight::Measurements
+      extend  Forwardable
 
       attr_reader :issues
 
-      DEFAULT_GRAPHICS_STATE = {
-        :ctm => Matrix.identity(3)
-      }
+      # Graphics State Operators
+      def_delegators :@state, :save_graphics_state, :restore_graphics_state
+
+      # Matrix Operators
+      def_delegators :@state, :concatenate_matrix
 
       def initialize(min_ppi)
         @min_ppi = min_ppi.to_i
@@ -35,82 +38,32 @@ module Preflight
       # we're about to start a new page, reset state
       #
       def page=(page)
+        @page   = page
+        @state  = PDF::Reader::PageState.new(page)
         @issues = []
-        @page    = page
-        @objects = page.objects
-        @stack   = [DEFAULT_GRAPHICS_STATE]
-        @xobjects = @page.xobjects || {}
-        @form_xobjects = {}
-      end
-
-      def save_graphics_state
-        @stack.push clone_state
-      end
-
-      def restore_graphics_state
-        @stack.pop
-      end
-
-      # update the current transformation matrix.
-      #
-      # If the CTM is currently undefined, just store the new values.
-      #
-      # If there's an existing CTM, then multiple the existing matrix
-      # with the new matrix to form the updated matrix.
-      #
-      def concatenate_matrix(*args)
-        transform = Matrix[
-          [args[0], args[1], 0],
-          [args[2], args[3], 0],
-          [args[4], args[5], 1]
-        ]
-        if state[:ctm]
-          state[:ctm] = transform * state[:ctm]
-        else
-          state[:ctm] = transform
-        end
       end
 
       # As each image is drawn on the canvas, determine the amount of device
       # space it's being crammed into and therefore the PPI.
       #
       def invoke_xobject(label)
-        save_graphics_state
-        xobject = @objects.deref(xobject(label))
-
-        matrix = xobject.hash[:Matrix]
-        concatenate_matrix(*matrix) if matrix
-
-        case xobject.hash[:Subtype]
-        when :Form  then invoke_form_xobject(label)
-        when :Image then invoke_image_xobject(label)
-        else
-          # ignore other xobject types for now
+        @state.invoke_xobject(label) do |xobj|
+          case xobj
+          when PDF::Reader::FormXObject then
+            xobj.walk(self)
+          when PDF::Reader::Stream
+            invoke_image_xobject(xobj) if xobj.hash[:Subtype] == :Image
+          else
+            raise xobj.inspect
+          end
         end
-
-        restore_graphics_state
       end
 
       private
 
-      def xobject(label)
-        deref(@form_xobjects[label] || @xobjects[label])
-      end
-
-      def invoke_form_xobject(label)
-        return unless xobject(label)
-        xobject = @objects.deref(xobject(label))
-        form = PDF::Reader::FormXObject.new(@page, xobject)
-        @form_xobjects = form.xobjects
-        form.walk(self)
-        @form_xobjects = {}
-      end
-
-      def invoke_image_xobject(label)
-        return unless xobject(label)
-
-        sample_w = deref(xobject(label).hash[:Width])  || 0
-        sample_h = deref(xobject(label).hash[:Height]) || 0
+      def invoke_image_xobject(xobject)
+        sample_w = deref(xobject.hash[:Width])  || 0
+        sample_h = deref(xobject.hash[:Height]) || 0
         device_w = pt2in(image_width)
         device_h = pt2in(image_height)
 
@@ -118,15 +71,15 @@ module Preflight
         vertical_ppi   = BigDecimal.new((sample_h / device_h).to_s).round(3)
 
         if horizontal_ppi < @min_ppi || vertical_ppi < @min_ppi
-          top_left     = transform(Point.new(0, 1))
-          bottom_right = transform(Point.new(1, 0))
+          top_left     = @state.ctm_transform(0, 1)
+          bottom_right = @state.ctm_transform(1, 0)
           @issues << Issue.new("Image with low PPI/DPI", self, :page           => @page.number,
                                                                :horizontal_ppi => horizontal_ppi,
                                                                :vertical_ppi   => vertical_ppi,
-                                                               :top            => top_left.y,
-                                                               :left           => top_left.x,
-                                                               :bottom         => bottom_right.y,
-                                                               :right          => bottom_right.x)
+                                                               :top            => top_left.first,
+                                                               :left           => top_left.last,
+                                                               :bottom         => bottom_right.first,
+                                                               :right          => bottom_right.last)
         end
       end
 
@@ -134,79 +87,26 @@ module Preflight
         @objects ? @objects.deref(obj) : obj
       end
 
-      # return the current transformation matrix
-      #
-      def ctm
-        state[:ctm]
-      end
-
-      def state
-        @stack.last
-      end
-
-      # transform x and y co-ordinates from the current user space to the
-      # underlying device space.
-      #
-      def transform(point, z = 1)
-        Point.new(
-          (ctm[0,0] * point.x) + (ctm[1,0] * point.y) + (ctm[2,0] * z),
-          (ctm[0,1] * point.x) + (ctm[1,1] * point.y) + (ctm[2,1] * z)
-        )
-      end
-
       # return a height of an image in the current device space. Auto
       # handles the translation from image space to device space.
       #
       def image_height
-        bottom_left = transform(Point.new(0, 0))
-        top_left    = transform(Point.new(0, 1))
+        bottom_left = @state.ctm_transform(0, 0)
+        top_left    = @state.ctm_transform(0, 1)
 
-        bottom_left.distance(top_left)
+        Math.hypot(bottom_left.first-top_left.first, bottom_left.last-top_left.last)
       end
 
       # return a width of an image in the current device space. Auto
       # handles the translation from image space to device space.
       #
       def image_width
-        bottom_left  = transform(Point.new(0, 0))
-        bottom_right = transform(Point.new(1, 0))
+        bottom_left  = @state.ctm_transform(0, 0)
+        bottom_right = @state.ctm_transform(1, 0)
 
-        bottom_left.distance(bottom_right)
+        Math.hypot(bottom_left.first-bottom_right.first, bottom_left.last-bottom_right.last)
       end
 
-      # when save_graphics_state is called, we need to push a new copy of the
-      # current state onto the stack. That way any modifications to the state
-      # will be undone once restore_graphics_state is called.
-      #
-      # This returns a deep clone of the current state, ensuring changes are
-      # keep separate from earlier states.
-      #
-      # YAML is used to round-trip the state through a string to easily perform
-      # the deep clone. Kinda hacky, but effective.
-      #
-      def clone_state
-        if @stack.empty?
-          {}
-        else
-          yaml_state = YAML.dump(@stack.last)
-          YAML.load(yaml_state)
-        end
-      end
-    end
-
-    # private class for representing points on a cartesian plain. Used
-    # to simplify maths in the MinPpi class.
-    #
-    class Point
-      attr_reader :x, :y
-
-      def initialize(x,y)
-        @x, @y = x,y
-      end
-
-      def distance(point)
-        Math.hypot(point.x - x, point.y - y)
-      end
     end
   end
 end
