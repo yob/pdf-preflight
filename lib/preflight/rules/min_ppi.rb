@@ -53,8 +53,6 @@ module Preflight
             xobj.walk(self)
           when PDF::Reader::Stream
             invoke_image_xobject(xobj) if xobj.hash[:Subtype] == :Image
-          else
-            raise xobj.inspect
           end
         end
       end
