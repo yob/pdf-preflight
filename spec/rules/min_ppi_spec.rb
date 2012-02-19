@@ -28,7 +28,7 @@ describe Preflight::Rules::MinPpi do
 
     PDF::Reader.open(filename) do |reader|
       reader.page(1).walk(rule)
-      rule.issues.size.should == 1
+      rule.issues.should have(1).item
 
       issue = rule.issues.first
       issue.horizontal_ppi.should == 72.0
