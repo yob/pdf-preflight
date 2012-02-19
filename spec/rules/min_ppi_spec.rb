@@ -28,7 +28,15 @@ describe Preflight::Rules::MinPpi do
 
     PDF::Reader.open(filename) do |reader|
       reader.page(1).walk(rule)
-      rule.issues.should_not be_empty
+      rule.issues.size.should == 1
+
+      issue = rule.issues.first
+      issue.horizontal_ppi.should == 72.0
+      issue.vertical_ppi.should   == 72.0
+      issue.top_left.should       == [36.0, 586.0]
+      issue.bottom_left.should    == [36, 133]
+      issue.bottom_right.should   == [640,133]
+      issue.top_right.should      == [640, 586]
     end
   end
 
@@ -38,7 +46,15 @@ describe Preflight::Rules::MinPpi do
 
     PDF::Reader.open(filename) do |reader|
       reader.page(1).walk(rule)
-      rule.issues.should_not be_empty
+      rule.issues.size.should == 1
+
+      issue = rule.issues.first
+      issue.horizontal_ppi.should == 148.151
+      issue.vertical_ppi.should   == 148.151
+      issue.top_left.should       == [250.24502999999999, 492.52378999999996]
+      issue.bottom_left.should    == [250.24502999999999, 401.64329]
+      issue.bottom_right.should   == [323.14383999999995, 401.64329]
+      issue.top_right.should      == [323.14383999999995, 492.52378999999996]
     end
   end
 

@@ -71,15 +71,13 @@ module Preflight
         vertical_ppi   = BigDecimal.new((sample_h / device_h).to_s).round(3)
 
         if horizontal_ppi < @min_ppi || vertical_ppi < @min_ppi
-          top_left     = @state.ctm_transform(0, 1)
-          bottom_right = @state.ctm_transform(1, 0)
           @issues << Issue.new("Image with low PPI/DPI", self, :page           => @page.number,
                                                                :horizontal_ppi => horizontal_ppi,
                                                                :vertical_ppi   => vertical_ppi,
-                                                               :top            => top_left.first,
-                                                               :left           => top_left.last,
-                                                               :bottom         => bottom_right.first,
-                                                               :right          => bottom_right.last)
+                                                               :top_left       => @state.ctm_transform(0, 1),
+                                                               :bottom_left    => @state.ctm_transform(0, 0),
+                                                               :bottom_right   => @state.ctm_transform(1, 0),
+                                                               :top_right      => @state.ctm_transform(1, 1))
         end
       end
 
