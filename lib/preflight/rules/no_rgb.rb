@@ -5,7 +5,7 @@ require 'forwardable'
 module Preflight
   module Rules
 
-    # Some print workflows the use of RGB colour.
+    # Some print workflows forbid the use of RGB colour.
     #
     # Arguments: none
     #
