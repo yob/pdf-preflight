@@ -114,7 +114,7 @@ describe Preflight::Rules::NoRgb do
     end
   end
 
-  context "a page with a CMYK image" do
+  context "a page with a CMYK fill colour defined in the page resources" do
     let!(:filename) { pdf_spec_file("cmyk") }
 
     it "should have no issues" do
@@ -128,7 +128,7 @@ describe Preflight::Rules::NoRgb do
     end
   end
 
-  context "a page with a spot colour that has a CMYK alternate" do
+  context "a page with a CMYK stroke colour defined in the page resources" do
     let!(:filename) { pdf_spec_file("cmyk") }
 
     it "should have no issues" do
@@ -136,6 +136,34 @@ describe Preflight::Rules::NoRgb do
 
       PDF::Reader.open(filename) do |reader|
         reader.page(4).walk(rule)
+      end
+
+      rule.issues.should be_empty
+    end
+  end
+
+  context "a page with a CMYK image" do
+    let!(:filename) { pdf_spec_file("cmyk") }
+
+    it "should have no issues" do
+      rule     = Preflight::Rules::NoRgb.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(5).walk(rule)
+      end
+
+      rule.issues.should be_empty
+    end
+  end
+
+  context "a page with a spot colour that has a CMYK alternate" do
+    let!(:filename) { pdf_spec_file("cmyk") }
+
+    it "should have no issues" do
+      rule     = Preflight::Rules::NoRgb.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(6).walk(rule)
       end
 
       rule.issues.should be_empty
