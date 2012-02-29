@@ -72,7 +72,7 @@ module Preflight
         case cs
         when Symbol then cs == :DeviceGray
         when Array  then
-          cs[0] == DeviceGray || cs[2] == :DeviceGray
+          cs[0] == :DeviceGray || cs[2] == :DeviceGray
         else
           false
         end
