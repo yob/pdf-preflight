@@ -22,6 +22,7 @@ module Preflight
       rule Preflight::Rules::PrintBoxes
       rule Preflight::Rules::OutputIntentForPdfx
       rule Preflight::Rules::PdfxOutputIntentHasKeys, :OutputConditionIdentifier, :Info
+      rule Preflight::Rules::NoRgb
 
     end
   end
