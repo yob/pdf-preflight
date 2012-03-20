@@ -14,6 +14,7 @@ module Preflight
     #
     #     rule Preflight::Rules::PageCount, 1
     #     rule Preflight::Rules::PageCount, 1..2
+    #     rule Preflight::Rules::PageCount, [4, 8]
     #     rule Preflight::Rules::PageCount, :even
     #     rule Preflight::Rules::PageCount, :odd
     #   end
@@ -32,6 +33,7 @@ module Preflight
         case @pattern
         when Fixnum then check_numeric(count)
         when Range  then check_range(count)
+        when Array  then check_array(count)
         when :even  then check_even(count)
         when :odd   then check_odd(count)
         else
@@ -52,6 +54,14 @@ module Preflight
       def check_range(count)
         if !@pattern.include?(count)
           [Issue.new("Page count must be between #{@pattern.min} and #{@pattern.max}", self, :pattern => @pattern, :count => count)]
+        else
+          []
+        end
+      end
+
+      def check_array(count)
+        if !@pattern.include?(count)
+          [Issue.new("Page count must be one of #{@pattern.join(', ')}", self, :pattern => @pattern, :count => count)]
         else
           []
         end
