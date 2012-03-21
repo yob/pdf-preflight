@@ -34,6 +34,22 @@ describe Preflight::Rules::PageCount do
     rule.check_hash(ohash).should_not be_empty
   end
 
+  it "should pass files with correct page count specified by array" do
+    filename = pdf_spec_file("pdfx-1a-subsetting")
+    ohash    = PDF::Reader::ObjectHash.new(filename)
+    rule     = Preflight::Rules::PageCount.new([1, 2])
+
+    rule.check_hash(ohash).should be_empty
+  end
+
+  it "should fail files with incorrect page count specified by array" do
+    filename = pdf_spec_file("pdfx-1a-subsetting")
+    ohash    = PDF::Reader::ObjectHash.new(filename)
+    rule     = Preflight::Rules::PageCount.new([2, 3])
+
+    rule.check_hash(ohash).should_not be_empty
+  end
+
   it "should pass files with correct page count specified by :odd" do
     filename = pdf_spec_file("pdfx-1a-subsetting")
     ohash    = PDF::Reader::ObjectHash.new(filename)
