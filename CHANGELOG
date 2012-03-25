@@ -1,5 +1,6 @@
 v0.2.0 (25th March 2012)
 - BREAKING API CHANGES FROM 0.1.1 release
+  - Detected issues are reported with an Issue object instead of a simple string
 - new rules
 - bug fixes and improvements to existing rules
 - improved documentation
