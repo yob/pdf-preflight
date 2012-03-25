@@ -2,8 +2,5 @@ new rules
 
 * check for PieceInfo in XObjects
 * check page scaling isn't used
-* DRY up graphics state and CTM related code. There's similar code
-  in several rules (like MinPpi and MinBleed)
-
 * upate page width/height rules to account for page scaling
 * upate page width/height rules to account for page rotation
