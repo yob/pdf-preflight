@@ -36,6 +36,8 @@ module Preflight
 
     module InstanceMethods
       def check(input)
+        valid_rules?
+
         if File.file?(input)
           check_filename(input)
         elsif input.is_a?(IO)
@@ -101,6 +103,18 @@ module Preflight
           nil
         end
         issues
+      end
+
+      # ensure all rules follow the prescribed API
+      #
+      def valid_rules?
+        invalid_rules = all_rules.reject { |arr|
+          arr.first.instance_methods.map(&:to_sym).include?(:check_hash) ||
+            arr.first.instance_methods.map(&:to_sym).include?(:issues)
+        }
+        if invalid_rules.size > 0
+          raise "The following rules are invalid: #{invalid_rules.join(", ")}. Preflight rules MUST respond to either check_hash() or issues()."
+        end
       end
 
       def hash_rules
