@@ -20,12 +20,12 @@ module Preflight
 
       def import(profile)
         profile.rules.each do |array|
-          rules << array.flatten
+          rules << array
         end
       end
 
       def rule(*args)
-        rules << args.flatten
+        rules << args
       end
 
       def rules
@@ -48,7 +48,7 @@ module Preflight
       end
 
       def rule(*args)
-        instance_rules << args.flatten
+        instance_rules << args
       end
 
       private
