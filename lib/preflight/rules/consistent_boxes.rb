@@ -17,14 +17,15 @@ module Preflight
     #
     class ConsistentBoxes
 
-      # each page box MUST be within .03 PDF points of the same box
-      # on all other pages
-      TOLERANCE = (BigDecimal.new("-0.03")..BigDecimal.new("0.03"))
+      # Default tolerance is that each page box MUST be within .03 PDF points
+      # of the same box on all other pages
+      DEFAULT_TOLERANCE = (BigDecimal.new("-0.03")..BigDecimal.new("0.03"))
 
       attr_reader :issues
 
-      def initialize
+      def initialize(tolerance = DEFAULT_TOLERANCE)
         @boxes = {}
+        @tolerance = tolerance
       end
 
       def page=(page)
@@ -38,7 +39,7 @@ module Preflight
         @boxes[:ArtBox]   ||= dict[:ArtBox]
 
         %w(MediaBox CropBox BleedBox TrimBox ArtBox).map(&:to_sym).each do |box_type|
-          unless subtract_all(@boxes[box_type], dict[box_type]).all? { |diff| TOLERANCE.include?(diff) }
+          unless subtract_all(@boxes[box_type], dict[box_type]).all? { |diff| @tolerance.include?(diff) }
             @issues << Issue.new("#{box_type} must be consistent across every page", self, :page             => page.number,
                                                                                            :inconsistent_box => box_type)
           end
