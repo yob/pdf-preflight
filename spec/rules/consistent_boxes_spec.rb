@@ -28,7 +28,7 @@ describe Preflight::Rules::ConsistentBoxes do
 
   it "pass files with mismatched MediaBox on each page within the defined tolerance" do
     filename  = pdf_spec_file("two_mismatched_pages")
-    tolerance =(BigDecimal.new(-300)..BigDecimal.new(300))
+    tolerance = (BigDecimal.new("-300")..BigDecimal.new("300"))
     rule      = Preflight::Rules::ConsistentBoxes.new(tolerance)
 
     PDF::Reader.open(filename) do |reader|
