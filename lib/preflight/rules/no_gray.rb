@@ -94,7 +94,7 @@ module Preflight
 
       def check_xobject(xobject)
         cs = xobject.hash[:ColorSpace]
-        if cs == :DeviceGray
+        if plain_gray?(cs) || indexed_gray?(cs) || alternative_is_gray?(cs)
           @issues << Issue.new("Gray image detected", self, :page  => @page.number)
         end
       end
