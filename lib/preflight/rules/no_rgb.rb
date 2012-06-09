@@ -94,7 +94,7 @@ module Preflight
 
       def check_xobject(xobject)
         cs = xobject.hash[:ColorSpace]
-        if cs == :DeviceRGB
+        if plain_rgb?(cs) || indexed_rgb?(cs) || alternative_is_rgb?(cs)
           @issues << Issue.new("RGB image detected", self, :page  => @page.number)
         end
       end
