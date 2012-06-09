@@ -68,20 +68,24 @@ module Preflight
 
       private
 
-      def color_space_is_rgb?(cs)
-        case cs
-        when Symbol then cs == :DeviceRGB
-        when Array  then
-          cs[2] == :DeviceRGB
-        else
-          false
-        end
+      def plain_rgb?(cs)
+        cs == :DeviceRGB || cs == [:DeviceRGB]
+      end
+
+      def indexed_rgb?(cs)
+        cs.is_a?(Array) && cs[0] == :Indexed && cs[1] == :DeviceRGB
+      end
+
+      def alternative_is_rgb?(cs)
+        cs.is_a?(Array) && cs[0] == :Separation && cs[2] == :DeviceRGB
       end
 
       def check_color_space(label)
         return if @resource_labels_seen.include?(label)
 
-        if color_space_is_rgb?(@state.find_color_space(label))
+        cs = @state.find_color_space(label)
+
+        if plain_rgb?(cs) || indexed_rgb?(cs) || alternative_is_rgb?(cs)
           @issues << Issue.new("RGB color detected", self, :page  => @page.number)
         end
 
