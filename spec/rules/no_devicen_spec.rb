@@ -66,7 +66,7 @@ describe Preflight::Rules::NoDevicen do
     end
   end
 
-  context "a page with a Indexed Separation stroke colour" do
+  context "a page with a Indexed DeviceN stroke colour" do
     let!(:filename) { pdf_spec_file("devicen") }
 
     it "should have one an issue" do
@@ -84,6 +84,31 @@ describe Preflight::Rules::NoDevicen do
 
       PDF::Reader.open(filename) do |reader|
         reader.page(4).walk(rule)
+      end
+
+      issue = rule.issues.first
+      issue.names.should == [:Orange]
+    end
+  end
+
+  context "a page with a DeviceN raster image" do
+    let!(:filename) { pdf_spec_file("devicen") }
+
+    it "should have one an issue" do
+      rule     = Preflight::Rules::NoDevicen.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(5).walk(rule)
+      end
+
+      rule.issues.should have(1).item
+    end
+
+    it "should return the colourant names in the issue" do
+      rule     = Preflight::Rules::NoDevicen.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(5).walk(rule)
       end
 
       issue = rule.issues.first

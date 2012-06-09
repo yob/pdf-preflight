@@ -45,6 +45,8 @@ module Preflight
           case xobj
           when PDF::Reader::FormXObject then
             xobj.walk(self)
+          when PDF::Reader::Stream then
+            check_xobject(xobj)
           end
         end
       end
@@ -86,6 +88,16 @@ module Preflight
         end
 
         @resource_labels_seen << label
+      end
+
+      def check_xobject(xobject)
+        cs = xobject.hash[:ColorSpace]
+        spot_names   = plain_devicen_names(cs)
+        spot_names ||= indexed_devicen_names(cs)
+        if spot_names
+          @issues << Issue.new("DeviceN image detected", self, :page  => @page.number,
+                                                               :names => spot_names)
+        end
       end
 
     end
