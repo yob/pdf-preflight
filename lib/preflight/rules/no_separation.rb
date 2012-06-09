@@ -45,6 +45,8 @@ module Preflight
           case xobj
           when PDF::Reader::FormXObject then
             xobj.walk(self)
+          when PDF::Reader::Stream then
+            check_xobject(xobj)
           end
         end
       end
@@ -85,6 +87,16 @@ module Preflight
         end
 
         @resource_labels_seen << label
+      end
+
+      def check_xobject(xobject)
+        cs = xobject.hash[:ColorSpace]
+        spot_name   = plain_separation_name(cs)
+        spot_name ||= indexed_separation_name(cs)
+        if spot_name
+          @issues << Issue.new("Separation image detected", self, :page  => @page.number,
+                                                                  :name  => spot_name)
+        end
       end
 
     end
