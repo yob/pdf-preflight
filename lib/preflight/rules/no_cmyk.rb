@@ -94,7 +94,7 @@ module Preflight
 
       def check_xobject(xobject)
         cs = xobject.hash[:ColorSpace]
-        if cs == :DeviceCMYK
+        if plain_cmyk?(cs) || indexed_cmyk?(cs) || alternative_is_cmyk?(cs)
           @issues << Issue.new("CMYK image detected", self, :page  => @page.number)
         end
       end
