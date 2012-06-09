@@ -86,6 +86,34 @@ describe Preflight::Rules::NoCmyk do
     end
   end
 
+  context "a page with an Indexed CMYK fill colour" do
+    let!(:filename) { pdf_spec_file("cmyk") }
+
+    it "should have one an issue" do
+      rule     = Preflight::Rules::NoCmyk.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(7).walk(rule)
+      end
+
+      rule.issues.should have(1).item
+    end
+  end
+
+  context "a page with an Indexed CMYK stroke colour" do
+    let!(:filename) { pdf_spec_file("cmyk") }
+
+    it "should have one an issue" do
+      rule     = Preflight::Rules::NoCmyk.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(8).walk(rule)
+      end
+
+      rule.issues.should have(1).item
+    end
+  end
+
   context "a page with an RGB fill colour" do
     let!(:filename) { pdf_spec_file("rgb") }
 

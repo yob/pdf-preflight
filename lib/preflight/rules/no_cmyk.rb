@@ -68,20 +68,24 @@ module Preflight
 
       private
 
-      def color_space_is_cmyk?(cs)
-        case cs
-        when Symbol then cs == :DeviceCMYK
-        when Array  then
-          cs[0] == :DeviceCMYK || cs[2] == :DeviceCMYK
-        else
-          false
-        end
+      def plain_cmyk?(cs)
+        cs == :DeviceCMYK || cs == [:DeviceCMYK]
+      end
+
+      def indexed_cmyk?(cs)
+        cs.is_a?(Array) && cs[0] == :Indexed && cs[1] == :DeviceCMYK
+      end
+
+      def alternative_is_cmyk?(cs)
+        cs.is_a?(Array) && cs[0] == :Separation && cs[2] == :DeviceCMYK
       end
 
       def check_color_space(label)
         return if @resource_labels_seen.include?(label)
 
-        if color_space_is_cmyk?(@state.find_color_space(label))
+        cs = @state.find_color_space(label)
+
+        if plain_cmyk?(cs) || indexed_cmyk?(cs) || alternative_is_cmyk?(cs)
           @issues << Issue.new("CMYK color detected", self, :page  => @page.number)
         end
 
