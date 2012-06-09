@@ -59,18 +59,26 @@ module Preflight
 
       private
 
-      def separation_name(cs)
+      def plain_separation_name(cs)
         if cs.is_a?(Array) && cs[0] == :Separation
           cs[1]
-        else
-          nil
+        end
+      end
+
+      def indexed_separation_name(cs)
+        if cs.is_a?(Array) && cs[0] == :Indexed
+          if cs[1].is_a?(Array) && cs[1][0] == :Separation
+            cs[1][1]
+          end
         end
       end
 
       def check_color_space(label)
         return if @resource_labels_seen.include?(label)
 
-        spot_name = separation_name(@state.find_color_space(label))
+        cs          = @state.find_color_space(label)
+        spot_name   = plain_separation_name(cs)
+        spot_name ||= indexed_separation_name(cs)
         if spot_name
           @issues << Issue.new("Separation color detected #{spot_name}", self, :page => @page.number,
                                                                                :name => spot_name)

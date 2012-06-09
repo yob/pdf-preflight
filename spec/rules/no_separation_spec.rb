@@ -41,6 +41,56 @@ describe Preflight::Rules::NoSeparation do
     end
   end
 
+  context "a page with a Indexed Separation fill colour" do
+    let!(:filename) { pdf_spec_file("spot") }
+
+    it "should have one an issue" do
+      rule     = Preflight::Rules::NoSeparation.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(3).walk(rule)
+      end
+
+      rule.issues.should have(1).item
+    end
+
+    it "should return the separation name in the issue" do
+      rule     = Preflight::Rules::NoSeparation.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(3).walk(rule)
+      end
+
+      issue = rule.issues.first
+      issue.name.should == :Orange
+    end
+  end
+
+  context "a page with a Indexed Separation stroke colour" do
+    let!(:filename) { pdf_spec_file("spot") }
+
+    it "should have one an issue" do
+      rule     = Preflight::Rules::NoSeparation.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(4).walk(rule)
+      end
+
+      rule.issues.should have(1).item
+    end
+
+    it "should return the separation name in the issue" do
+      rule     = Preflight::Rules::NoSeparation.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(4).walk(rule)
+      end
+
+      issue = rule.issues.first
+      issue.name.should == :Orange
+    end
+  end
+
   context "a page with an RGB fill colour" do
     let!(:filename) { pdf_spec_file("rgb") }
 
