@@ -68,20 +68,24 @@ module Preflight
 
       private
 
-      def color_space_is_gray?(cs)
-        case cs
-        when Symbol then cs == :DeviceGray
-        when Array  then
-          cs[0] == :DeviceGray || cs[2] == :DeviceGray
-        else
-          false
-        end
+      def plain_gray?(cs)
+        cs == :DeviceGray || cs == [:DeviceGray]
+      end
+
+      def indexed_gray?(cs)
+        cs.is_a?(Array) && cs[0] == :Indexed && cs[1] == :DeviceGray
+      end
+
+      def alternative_is_gray?(cs)
+        cs.is_a?(Array) && cs[0] == :Separation && cs[2] == :DeviceGray
       end
 
       def check_color_space(label)
         return if @resource_labels_seen.include?(label)
 
-        if color_space_is_gray?(@state.find_color_space(label))
+        cs = @state.find_color_space(label)
+
+        if plain_gray?(cs) || indexed_gray?(cs) || alternative_is_gray?(cs)
           @issues << Issue.new("Gray color detected", self, :page  => @page.number)
         end
 

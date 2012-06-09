@@ -72,4 +72,32 @@ describe Preflight::Rules::NoGray do
     end
   end
 
+  context "a page with an Indexed Gray fill colour" do
+    let!(:filename) { pdf_spec_file("gray") }
+
+    it "should have one an issue" do
+      rule     = Preflight::Rules::NoGray.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(6).walk(rule)
+      end
+
+      rule.issues.should have(1).item
+    end
+  end
+
+  context "a page with an Indexed Gray stroke colour" do
+    let!(:filename) { pdf_spec_file("gray") }
+
+    it "should have one an issue" do
+      rule     = Preflight::Rules::NoGray.new
+
+      PDF::Reader.open(filename) do |reader|
+        reader.page(7).walk(rule)
+      end
+
+      rule.issues.should have(1).item
+    end
+  end
+
 end
