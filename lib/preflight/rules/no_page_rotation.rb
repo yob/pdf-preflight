@@ -25,12 +25,13 @@ module Preflight
       def page=(page)
         attrs = page.attributes
 
-        if attrs[:Rotate] && attrs[:Rotate] != 0
+        if attrs[:Rotate] && page.objects.deref(attrs[:Rotate]) != 0
           @issues = [Issue.new("Page is rotated", self, :page => page.number)]
         else
           @issues = []
         end
       end
+
     end
   end
 end
