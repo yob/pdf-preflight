@@ -1,3 +1,8 @@
+v0.3.0 (28th April 2013)
+- new rules
+- improved the behaviour of some rules
+- stopped rule arguments that are mutated from affected later profile checks
+
 v0.2.0 (25th March 2012)
 - BREAKING API CHANGES FROM 0.1.1 release
   - Detected issues are reported with an Issue object instead of a simple string
