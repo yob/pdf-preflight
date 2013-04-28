@@ -1,5 +1,6 @@
 # coding: utf-8
 
+
 module Preflight
 
   # base functionality for all profiles.
@@ -116,7 +117,7 @@ module Preflight
           arr.first.instance_methods.map(&:to_sym).include?(:check_hash)
         }.map { |arr|
           klass = arr[0]
-          klass.new(*arr[1,10])
+          klass.new(*deep_clone(arr[1,10]))
         }
       end
 
@@ -125,8 +126,15 @@ module Preflight
           arr.first.instance_methods.map(&:to_sym).include?(:issues)
         }.map { |arr|
           klass = arr[0]
-          klass.new(*arr[1,10])
+          klass.new(*deep_clone(arr[1,10]))
         }
+      end
+
+      # round trip and object through marshall as a hacky but effective
+      # way to deep clone the object. Used to ensure rules that mutate
+      # their arguments don't impact later profile checks.
+      def deep_clone(obj)
+        Marshal.load Marshal.dump(obj)
       end
     end
   end
